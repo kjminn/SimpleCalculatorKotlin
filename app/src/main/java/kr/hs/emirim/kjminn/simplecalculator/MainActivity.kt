@@ -3,6 +3,7 @@ package kr.hs.emirim.kjminn.simplecalculator
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
+import android.view.View.OnClickListener
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
@@ -29,29 +30,32 @@ class MainActivity : AppCompatActivity() {
         btnMinus = findViewById(R.id.btn_minus)
         btnMultiply = findViewById(R.id.btn_multiply)
         btnDivide = findViewById(R.id.btn_divide)
-        btnAdd.setOnClickListener{
-            num1 = edit1.text.toString()
-            num2 = edit2.text.toString()
-            if(num1=="" || num2==""){
-                Toast.makeText(baseContext, "숫자를 입력하지 않고 버튼을 누르면 안됨!!!", Toast.LENGTH_LONG).show()
-                return@setOnClickListener
-            }
-            result = num1.toDouble() + num2.toDouble()
-            textResult.text = "계산 결과: " + result
+        btnAdd.setOnClickListener(btnListener)
+        btnMinus.setOnClickListener(btnListener)
+        btnMultiply.setOnClickListener(btnListener)
+        btnDivide.setOnClickListener(btnListener)
+    }
+
+    var btnListener = OnClickListener{
+        num1 = edit1.text.toString()
+        num2 = edit2.text.toString()
+        if(num1=="" || num2==""){
+            Toast.makeText(baseContext, "숫자를 입력하지 않고 버튼을 누르면 안됨!!!", Toast.LENGTH_LONG).show()
+            return@OnClickListener
         }
-        btnDivide.setOnClickListener{
-            num1 = edit1.text.toString()
-            num2 = edit2.text.toString()
-            if(num1=="" || num2==""){
-                Toast.makeText(baseContext, "숫자를 입력하지 않고 버튼을 누르면 안됨!!!", Toast.LENGTH_LONG).show()
-                return@setOnClickListener
+
+        when(it.id){
+            R.id.btn_plus -> result = num1.toDouble() + num2.toDouble()
+            R.id.btn_minus -> result = num1.toDouble() - num2.toDouble()
+            R.id.btn_multiply -> result = num1.toDouble() * num2.toDouble()
+            R.id.btn_divide -> {
+                if(num2.toDouble() == 0.0){
+                    Toast.makeText(baseContext, "0으로 나누면 안됨!!!", Toast.LENGTH_LONG).show()
+                    return@OnClickListener
+                }
+                result = num1.toDouble() / num2.toDouble()
             }
-            if(num2.toDouble() == 0.0){
-                Toast.makeText(baseContext, "0으로 나누면 안됨!!!", Toast.LENGTH_LONG).show()
-                return@setOnClickListener
-            }
-            result = num1.toDouble() / num2.toDouble()
-            textResult.text = "계산 결과: " + result
         }
+        textResult.text = "계산 결과: " + result
     }
 }
